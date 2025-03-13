@@ -53,5 +53,5 @@ export const PROJECTS = [
 export const CONTACT = {
   address: "Pipliyhana Indore (M.p) ",
   phoneNo: "+91-9755160469 ",
-  email: "Tayderaj848@.com",
+  email: "Tayderaj848@gmail.com",
 };
