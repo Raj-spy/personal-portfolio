@@ -4,7 +4,8 @@ import Projects from "./components/Projects";
 import Technologies from "./components/Technologies";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
-
+// import OpenSource from "./components/OpenSource";
+ 
 const App = () => {
   return (
     <div className="overflow-x-hidden text-stone-300 antialiased">
@@ -19,6 +20,7 @@ const App = () => {
         <Technologies />
         <Projects />
         <Experience />
+        {/* <OpenSource /> */}
         <Contact />
       </div>
     </div>
