@@ -1,6 +1,6 @@
  import { EXPERIENCES } from "../constants";
 import { MotionConfig, motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const container = {
   hidden: { opacity: 0 },
@@ -17,6 +17,13 @@ const item = {
 
 export default function Experience() {
   const [openIndex, setOpenIndex] = useState(null);
+
+  const progress = useMemo(() => {
+    if (!EXPERIENCES?.length) return 0;
+    return openIndex === null ? 0 : (openIndex + 1) / EXPERIENCES.length;
+  }, [openIndex]);
+
+  const onToggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -39,28 +46,39 @@ export default function Experience() {
           viewport={{ once: true, amount: 0.3 }}
           className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8"
         >
-          {/* Vertical rail */}
+          {/* Vertical rail base */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute left-[22px] top-0 h-full w-px bg-gradient-to-b from-stone-300 via-stone-200 to-transparent dark:from-stone-700 dark:via-stone-800"
+          />
+          {/* Rail progress fill */}
+          <div
+            aria-hidden="true"
+            style={{ height: `${progress * 100}%` }}
+            className="pointer-events-none absolute left-[22px] top-0 w-px bg-gradient-to-b from-stone-900 to-stone-500 transition-[height] duration-500 dark:from-white dark:to-stone-400"
           />
 
           {EXPERIENCES.map((exp, i) => {
             const isOpen = openIndex === i;
             return (
-              <motion.li
-                key={exp.role + i}
-                variants={item}
-                className="relative pl-14"
-              >
-                {/* Dot */}
+              <motion.li key={exp.role + i} variants={item} className="relative pl-14">
+                {/* Dot button */}
                 <button
                   type="button"
                   aria-label={`Toggle ${exp.role} at ${exp.company}`}
-                  onClick={() => setOpenIndex(isOpen ? null : i)}
+                  aria-expanded={isOpen}
+                  onClick={() => onToggle(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onToggle(i);
+                    }
+                  }}
                   className="group absolute left-0 top-2 grid h-11 w-11 place-items-center rounded-full border border-stone-300 bg-white shadow-sm transition-colors hover:bg-stone-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500 dark:border-stone-700 dark:bg-stone-900"
                 >
-                  <span className={`h-2.5 w-2.5 rounded-full transition-colors ${isOpen ? "bg-stone-900 dark:bg-white" : "bg-stone-400 dark:bg-stone-500"}`} />
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full transition-colors ${isOpen ? "bg-stone-900 dark:bg-white" : "bg-stone-400 dark:bg-stone-500"}`}
+                  />
                 </button>
 
                 {/* Card */}
@@ -73,7 +91,6 @@ export default function Experience() {
                       <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{exp.year}</p>
                     </div>
 
-                    {/* Compact badges: location/type if provided */}
                     <div className="flex items-center gap-2">
                       {exp.type && (
                         <span className="rounded-full border border-stone-200 bg-white px-2 py-1 text-[11px] text-stone-700 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-200">
@@ -87,6 +104,15 @@ export default function Experience() {
                       )}
                     </div>
                   </div>
+
+                  {/* Hover preview line */}
+                  {!isOpen && exp.description && (
+                    <div className="mt-2">
+                      <p className="line-clamp-1 text-sm text-stone-600 opacity-80 transition-opacity group-hover:opacity-100 dark:text-stone-300">
+                        {exp.description}
+                      </p>
+                    </div>
+                  )}
 
                   <AnimatePresence initial={false}>
                     {isOpen && (
@@ -103,16 +129,16 @@ export default function Experience() {
                             {exp.description}
                           </p>
 
-                          {/* Highlights list if provided */}
                           {Array.isArray(exp.highlights) && exp.highlights.length > 0 && (
                             <ul className="list-disc pl-5 text-sm text-stone-700 dark:text-stone-300">
                               {exp.highlights.map((h) => (
-                                <li key={h} className="leading-relaxed">{h}</li>
+                                <li key={h} className="leading-relaxed">
+                                  {h}
+                                </li>
                               ))}
                             </ul>
                           )}
 
-                          {/* Tech tags */}
                           {Array.isArray(exp.technologies) && exp.technologies.length > 0 && (
                             <ul className="mt-1 flex flex-wrap gap-2">
                               {exp.technologies.map((t) => (
