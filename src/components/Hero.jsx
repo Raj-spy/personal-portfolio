@@ -1,80 +1,89 @@
+ // src/components/Hero.jsx
 import profilepic from "../assets/mypic.jpeg";
-import { motion } from "framer-motion";
+import { MotionConfig, motion } from "framer-motion";
 
-const containerVariants = {
-  hidden: {
-    opacity: 0, x: -100 },
+const container = {
+  hidden: { opacity: 0, y: 12 },
   visible: {
-    opacity: 1, x: 0,
-    transition: { duration: 0.5, staggerchildren: 0.5 }
-  }
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1], staggerChildren: 0.08 },
+  },
 };
-const childvariants = {
-  hidden: { opacity:0,x: -100 },
-  visible: { opacity:1,x: 0, transition: { duration: 0.5 } }
-}
-const Hero = () => {
+
+const item = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+};
+
+export default function Hero() {
   return (
-    <div className="pb-4 lg:mb-36">
-      <div className="flex flex-wrap lg:flex-row-reverse">
-        {/* Image section */}
-        <div className="w-full lg:w-1/2">
-          <div className="flex justify-center lg:p-8"> {/* Fixed typo "justifty-center" to "justify-center" */}
-            <motion.img
-              src={profilepic}
-              alt="raj"
-              className="border border-stone-900 rounded-3xl"
-              width={650}
-              height={650} 
-              initail={{x:100,opacity:0}}
-              animate={{x:0,opacity:1}} 
-              transition={{duration:1, delay:1.5}} 
-            />
-          </div>
-        </div>
+    <MotionConfig reducedMotion="user">
+      <section className="relative" aria-label="Introduction">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-8 py-12 sm:gap-10 sm:py-16 lg:grid-cols-2 lg:py-24">
+            {/* Text */}
+            <motion.div initial="hidden" animate="visible" variants={container} className="order-2 lg:order-1">
+              <motion.h1
+                variants={item}
+                className="font-semibold tracking-tight text-[clamp(28px,6vw,56px)] sm:text-[clamp(32px,5vw,64px)]"
+              >
+                Raj Tayde
+              </motion.h1>
 
-        {/* Text section */}
-        <div className="w-full lg:w-1/2">
-        <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
+              <motion.p variants={item} className="mt-2 tracking-tight text-[clamp(18px,3.5vw,28px)]">
+                <span className="bg-gradient-to-r from-stone-300 to-stone-600 bg-clip-text text-transparent">
+                  Full‑stack Developer
+                </span>
+              </motion.p>
 
-           className="flex flex-col items-center lg:items-start mt-10">
-            <motion.h2
-            variants={childvariants}
-             className="pb-2 text-4xl tracking-tighter lg:text-8xl"> {/* Fixed typo "text-4*l" to "text-4xl" and "text-8*l" to "text-8xl" */}
-              Raj Tayde
-            </motion.h2>
-            <motion.span 
-            variants={childvariants}
-            className="bg-gradient-to-r from-stone-300 to-stone-600 bg-clip-text text-3xl tracking-tight text-transparent">
-              Full Stack Developer
-            </motion.span>
-            <motion.p
-            variants={childvariants}
-             className="my-2 max-w-lg py-6 text-xl leading-relaxed tracking-tighter">
-              {/* HERO_CONTENT should be a variable or text. Replace with your content */}
-              "I’m a Full-Stack Developer with a strong focus on frontend development, crafting intuitive and visually appealing user experiences. Proficient in modern web technologies like React, Next.js, and Tailwind CSS, I build dynamic and responsive applications. On the backend, I work with Node.js, MongoDB, and PostgreSQL to ensure seamless functionality. Passionate about problem-solving and clean code, I’m always exploring new technologies to enhance my development skills and create impactful digital solutions."
-              Passionate about coding, building scalable and efficient applications, and continuously learning new technologies.
-            </motion.p>
-            <motion.a
-            variants={childvariants}
-              href="/resume.pdf"
-              target="_blank"
-              rel="noreferrer noopener"
-              download
-              className="bg-white rounded-full px-6 py-2 text-stone-900 font-bold"
-            >
-              Download Resume
-            </motion.a>
+              <motion.p
+                variants={item}
+                className="mt-5 max-w-prose text-[clamp(14px,2.8vw,18px)] leading-[1.7] text-stone-600 dark:text-stone-300"
+              >
+                Builds fast, accessible React/Next.js apps with clean UI and measurable outcomes. Node.js, Postgres/Mongo, and modern tooling with a focus on performance and DX.
+              </motion.p>
+
+              <motion.div variants={item} className="mt-7 flex flex-wrap gap-3">
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center rounded-full bg-stone-900 px-5 py-2.5 text-[15px] text-white hover:bg-stone-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-500"
+                >
+                  Download Resume
+                </a>
+                <a
+                  href="#projects"
+                  className="inline-flex items-center rounded-full border border-stone-300 px-5 py-2.5 text-[15px] text-stone-800 hover:bg-stone-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-500 dark:border-stone-600 dark:text-stone-200 dark:hover:bg-stone-800/40"
+                >
+                  View Projects
+                </a>
+              </motion.div>
             </motion.div>
 
+            {/* Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+              className="order-1 flex justify-center lg:order-2"
+            >
+              <div className="relative overflow-hidden rounded-3xl ring-1 ring-stone-200 dark:ring-stone-700">
+                <motion.img
+                  src={profilepic}
+                  alt="Portrait of Raj Tayde"
+                  className="h-auto w-[min(90vw,520px)] max-w-full object-cover sm:w-[min(80vw,520px)]"
+                  loading="eager"
+                  decoding="async"
+                  width="520"
+                  height="520"
+                />
+              </div>
+            </motion.div>
           </div>
         </div>
-      </div>
-    
+      </section>
+    </MotionConfig>
   );
-};
-
-export default Hero;
+}
